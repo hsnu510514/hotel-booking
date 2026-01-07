@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "start": "vite start"
+    "start": "node .output/server/index.mjs"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.18",
@@ -21,6 +21,7 @@
     "@vitejs/plugin-react": "^5.1.2",
     "autoprefixer": "^10.4.23",
     "drizzle-kit": "^0.31.8",
+    "nitro": "^3.0.1-alpha.1",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.18",
     "vite": "^7.3.0",
