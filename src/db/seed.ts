@@ -1,8 +1,20 @@
-import { db } from './index'
+try {
+    // @ts-ignore
+    if (typeof process.loadEnvFile === 'function') {
+        process.loadEnvFile();
+        console.log('Loaded .env file');
+    }
+} catch (error) {
+    // If .env file is not found or we are in an environment that has them pre-loaded
+    console.log('Using existing environment variables matching');
+}
+
+const { db } = await import('./index');
 import { roomTypes, mealOptions, activities } from './schema'
 
 async function seed() {
     console.log('Seeding database...')
+
 
     // Rooms
     const rooms = await db.insert(roomTypes).values([
