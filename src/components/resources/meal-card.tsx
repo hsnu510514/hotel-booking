@@ -21,8 +21,8 @@ export function MealCard({ meal }: MealCardProps) {
                     alt={meal.name}
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
-                <div className="absolute top-4 right-4">
-                    <Badge variant="secondary" className="backdrop-blur-md bg-secondary/80 border-none">
+                <div className="absolute top-4 right-4 text-white">
+                    <Badge variant="secondary" className="backdrop-blur-md bg-secondary/80 border-none text-lg px-4 py-1.5 font-bold">
                         ${meal.price}
                     </Badge>
                 </div>

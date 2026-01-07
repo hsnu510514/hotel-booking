@@ -12,6 +12,7 @@ import "@/globals.css"
 
 import { getSession } from "@/utils/session"
 import { QueryClient } from "@tanstack/react-query"
+import { NotFound } from "@/components/layout/NotFound"
 
 export const Route = createRootRoute({
     context: () => ({
@@ -31,11 +32,51 @@ export const Route = createRootRoute({
                 content: "width=device-width, initial-scale=1",
             },
             {
-                title: "Hotel Booking System",
+                title: "Lumina Sanctuary - Luxury Hotel Booking",
             },
+            {
+                name: "description",
+                content: "Experience luxury and comfort at Lumina Sanctuary. Book your stay, dining, and activities with us.",
+            },
+            {
+                property: "og:title",
+                content: "Lumina Sanctuary - Luxury Hotel Booking",
+            },
+            {
+                property: "og:description",
+                content: "Experience luxury and comfort at Lumina Sanctuary. Book your stay, dining, and activities with us.",
+            },
+            {
+                property: "og:image",
+                content: "/luxury_hotel_hero.png",
+            },
+            {
+                property: "og:type",
+                content: "website",
+            },
+            {
+                name: "twitter:card",
+                content: "summary_large_image",
+            },
+            {
+                name: "twitter:title",
+                content: "Lumina Sanctuary - Luxury Hotel Booking",
+            },
+            {
+                name: "twitter:description",
+                content: "Experience luxury and comfort at Lumina Sanctuary. Book your stay, dining, and activities with us.",
+            },
+            {
+                name: "twitter:image",
+                content: "/luxury_hotel_hero.png",
+            },
+        ],
+        links: [
+            { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
         ],
     }),
     component: RootComponent,
+    notFoundComponent: () => <NotFound />,
 })
 
 function RootComponent() {
@@ -52,11 +93,11 @@ function RootComponent() {
 
 function RootDocument({ children }: { children: ReactNode }) {
     return (
-        <html lang="en">
+        <html lang="en" suppressHydrationWarning>
             <head>
                 <HeadContent />
             </head>
-            <body>
+            <body suppressHydrationWarning>
                 {children}
                 <Toaster richColors position="bottom-right" />
                 <Scripts />

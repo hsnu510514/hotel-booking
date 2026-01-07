@@ -12,7 +12,7 @@ export function getRouter() {
     scrollRestoration: true,
   })
 
-  return routerWithQueryClient(router, queryClient)
+  return routerWithQueryClient(router as any, queryClient)
 }
 
 declare module "@tanstack/react-router" {

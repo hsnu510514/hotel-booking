@@ -5,7 +5,7 @@ import { upsertActivity, deleteActivity } from '@/utils/admin'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Plus, Pencil, Trash2, Sparkles, DollarSign, Image as ImageIcon, Loader2, Clock } from 'lucide-react'
+import { Plus, Pencil, Trash2, Sparkles, DollarSign, Image as ImageIcon, Loader2, Clock, PackageSearch } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { Input } from '@/components/ui/input'
@@ -66,7 +66,9 @@ function AdminActivitiesPage() {
             name: formData.get('name') as string,
             description: formData.get('description') as string,
             price: formData.get('price') as string,
-            duration: formData.get('duration') as string,
+            startTime: formData.get('startTime') as string,
+            endTime: formData.get('endTime') as string,
+            totalInventory: parseInt(formData.get('totalInventory') as string),
             imageUrl: formData.get('imageUrl') as string,
         }
         saveMutation.mutate({ data })
@@ -103,7 +105,7 @@ function AdminActivitiesPage() {
                                 <label className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Activity Name</label>
                                 <Input name="name" defaultValue={editingActivity?.name} placeholder="e.g. Midnight Sea Kayaking" required className="rounded-xl h-12" />
                             </div>
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-3 gap-4">
                                 <div className="grid gap-2">
                                     <label className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Price</label>
                                     <div className="relative">
@@ -111,11 +113,27 @@ function AdminActivitiesPage() {
                                         <Input name="price" defaultValue={editingActivity?.price} placeholder="0.00" required className="rounded-xl h-12 pl-10" />
                                     </div>
                                 </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="grid gap-2">
+                                        <label className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Start Time</label>
+                                        <div className="relative">
+                                            <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                            <Input name="startTime" type="time" defaultValue={editingActivity?.startTime} required className="rounded-xl h-12 pl-10" />
+                                        </div>
+                                    </div>
+                                    <div className="grid gap-2">
+                                        <label className="text-sm font-bold uppercase tracking-widest text-muted-foreground">End Time</label>
+                                        <div className="relative">
+                                            <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                            <Input name="endTime" type="time" defaultValue={editingActivity?.endTime} required className="rounded-xl h-12 pl-10" />
+                                        </div>
+                                    </div>
+                                </div>
                                 <div className="grid gap-2">
-                                    <label className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Duration</label>
+                                    <label className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Places</label>
                                     <div className="relative">
-                                        <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                        <Input name="duration" defaultValue={editingActivity?.duration} placeholder="e.g. 2 Hours" required className="rounded-xl h-12 pl-10" />
+                                        <PackageSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                        <Input name="totalInventory" type="number" defaultValue={editingActivity?.totalInventory} required className="rounded-xl h-12 pl-10" />
                                     </div>
                                 </div>
                             </div>
@@ -148,9 +166,10 @@ function AdminActivitiesPage() {
                 <Table>
                     <TableHeader className="bg-muted/50">
                         <TableRow className="hover:bg-transparent border-border/40">
-                            <TableHead className="w-[100px] font-bold py-6">Visual</TableHead>
+                            <TableHead className="py-6 font-bold">Visual</TableHead>
                             <TableHead className="font-bold">Experience</TableHead>
-                            <TableHead className="font-bold">Duration</TableHead>
+                            <TableHead className="font-bold">Time Slot</TableHead>
+                            <TableHead className="font-bold">Inventory</TableHead>
                             <TableHead className="font-bold">Price</TableHead>
                             <TableHead className="text-right font-bold pr-8">Actions</TableHead>
                         </TableRow>
@@ -192,7 +211,13 @@ function AdminActivitiesPage() {
                                     <TableCell>
                                         <div className="flex items-center gap-2 font-medium">
                                             <Clock className="h-4 w-4 text-muted-foreground" />
-                                            {activity.duration}
+                                            {activity.startTime} - {activity.endTime}
+                                        </div>
+                                    </TableCell>
+                                    <TableCell>
+                                        <div className="flex items-center gap-2 font-medium">
+                                            <PackageSearch className="h-4 w-4 text-muted-foreground" />
+                                            {activity.totalInventory} Spots
                                         </div>
                                     </TableCell>
                                     <TableCell>

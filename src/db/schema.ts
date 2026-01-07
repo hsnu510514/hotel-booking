@@ -78,7 +78,8 @@ export const roomTypes = pgTable("room_type", {
     name: text("name").notNull(),
     description: text("description"),
     pricePerNight: decimal("price_per_night", { precision: 10, scale: 2 }).notNull(),
-    capacity: integer("capacity").notNull(),
+    capacity: integer("capacity").notNull(), // people per room
+    totalInventory: integer("total_inventory").notNull().default(5), // number of rooms of this type
     imageUrl: text("image_url"),
 })
 
@@ -87,6 +88,7 @@ export const mealOptions = pgTable("meal_option", {
     name: text("name").notNull(),
     description: text("description"),
     price: decimal("price", { precision: 10, scale: 2 }).notNull(),
+    totalInventory: integer("total_inventory").notNull().default(100), // servings per day
     imageUrl: text("image_url"),
 })
 
@@ -95,7 +97,9 @@ export const activities = pgTable("activity", {
     name: text("name").notNull(),
     description: text("description"),
     price: decimal("price", { precision: 10, scale: 2 }).notNull(),
-    duration: text("duration"),
+    startTime: text("start_time"), // e.g., "09:00"
+    endTime: text("end_time"),     // e.g., "11:00"
+    totalInventory: integer("total_inventory").notNull().default(20), // spots per session/day
     imageUrl: text("image_url"),
 })
 
@@ -118,5 +122,8 @@ export const bookingItems = pgTable("booking_item", {
         .references(() => bookings.id, { onDelete: "cascade" }),
     type: text("type", { enum: ["room", "meal", "activity"] }).notNull(),
     itemId: uuid("item_id").notNull(),
-    price: decimal("price", { precision: 10, scale: 2 }).notNull(),
+    price: decimal("price", { precision: 10, scale: 2 }).notNull(), // unit price at time of booking
+    quantity: integer("quantity").notNull().default(1),
+    startDate: timestamp("start_date", { mode: "date" }),
+    endDate: timestamp("end_date", { mode: "date" }),
 })

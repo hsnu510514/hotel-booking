@@ -17,6 +17,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminRoomsRouteImport } from './routes/admin/rooms'
 import { Route as AdminMealsRouteImport } from './routes/admin/meals'
+import { Route as AdminInventoryRouteImport } from './routes/admin/inventory'
 import { Route as AdminBookingsRouteImport } from './routes/admin/bookings'
 import { Route as AdminActivitiesRouteImport } from './routes/admin/activities'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
@@ -61,6 +62,11 @@ const AdminMealsRoute = AdminMealsRouteImport.update({
   path: '/meals',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminInventoryRoute = AdminInventoryRouteImport.update({
+  id: '/inventory',
+  path: '/inventory',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminBookingsRoute = AdminBookingsRouteImport.update({
   id: '/bookings',
   path: '/bookings',
@@ -85,6 +91,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/admin/activities': typeof AdminActivitiesRoute
   '/admin/bookings': typeof AdminBookingsRoute
+  '/admin/inventory': typeof AdminInventoryRoute
   '/admin/meals': typeof AdminMealsRoute
   '/admin/rooms': typeof AdminRoomsRoute
   '/admin/': typeof AdminIndexRoute
@@ -97,6 +104,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/admin/activities': typeof AdminActivitiesRoute
   '/admin/bookings': typeof AdminBookingsRoute
+  '/admin/inventory': typeof AdminInventoryRoute
   '/admin/meals': typeof AdminMealsRoute
   '/admin/rooms': typeof AdminRoomsRoute
   '/admin': typeof AdminIndexRoute
@@ -111,6 +119,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/admin/activities': typeof AdminActivitiesRoute
   '/admin/bookings': typeof AdminBookingsRoute
+  '/admin/inventory': typeof AdminInventoryRoute
   '/admin/meals': typeof AdminMealsRoute
   '/admin/rooms': typeof AdminRoomsRoute
   '/admin/': typeof AdminIndexRoute
@@ -126,6 +135,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/admin/activities'
     | '/admin/bookings'
+    | '/admin/inventory'
     | '/admin/meals'
     | '/admin/rooms'
     | '/admin/'
@@ -138,6 +148,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/admin/activities'
     | '/admin/bookings'
+    | '/admin/inventory'
     | '/admin/meals'
     | '/admin/rooms'
     | '/admin'
@@ -151,6 +162,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/admin/activities'
     | '/admin/bookings'
+    | '/admin/inventory'
     | '/admin/meals'
     | '/admin/rooms'
     | '/admin/'
@@ -224,6 +236,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminMealsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/inventory': {
+      id: '/admin/inventory'
+      path: '/inventory'
+      fullPath: '/admin/inventory'
+      preLoaderRoute: typeof AdminInventoryRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/bookings': {
       id: '/admin/bookings'
       path: '/bookings'
@@ -251,6 +270,7 @@ declare module '@tanstack/react-router' {
 interface AdminRouteChildren {
   AdminActivitiesRoute: typeof AdminActivitiesRoute
   AdminBookingsRoute: typeof AdminBookingsRoute
+  AdminInventoryRoute: typeof AdminInventoryRoute
   AdminMealsRoute: typeof AdminMealsRoute
   AdminRoomsRoute: typeof AdminRoomsRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -259,6 +279,7 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminActivitiesRoute: AdminActivitiesRoute,
   AdminBookingsRoute: AdminBookingsRoute,
+  AdminInventoryRoute: AdminInventoryRoute,
   AdminMealsRoute: AdminMealsRoute,
   AdminRoomsRoute: AdminRoomsRoute,
   AdminIndexRoute: AdminIndexRoute,

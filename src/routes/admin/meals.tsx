@@ -5,7 +5,7 @@ import { upsertMeal, deleteMeal } from '@/utils/admin'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Plus, Pencil, Trash2, Utensils, DollarSign, Image as ImageIcon, Loader2 } from 'lucide-react'
+import { Plus, Pencil, Trash2, Utensils, DollarSign, Image as ImageIcon, Loader2, PackageSearch } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { Input } from '@/components/ui/input'
@@ -66,6 +66,7 @@ function AdminMealsPage() {
             name: formData.get('name') as string,
             description: formData.get('description') as string,
             price: formData.get('price') as string,
+            totalInventory: parseInt(formData.get('totalInventory') as string),
             imageUrl: formData.get('imageUrl') as string,
         }
         saveMutation.mutate({ data })
@@ -102,11 +103,20 @@ function AdminMealsPage() {
                                 <label className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Dish Name</label>
                                 <Input name="name" defaultValue={editingMeal?.name} placeholder="e.g. Black Truffle Pasta" required className="rounded-xl h-12" />
                             </div>
-                            <div className="grid gap-2">
-                                <label className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Price</label>
-                                <div className="relative">
-                                    <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                    <Input name="price" defaultValue={editingMeal?.price} placeholder="0.00" required className="rounded-xl h-12 pl-10" />
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="grid gap-2">
+                                    <label className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Price</label>
+                                    <div className="relative">
+                                        <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                        <Input name="price" defaultValue={editingMeal?.price} placeholder="0.00" required className="rounded-xl h-12 pl-10" />
+                                    </div>
+                                </div>
+                                <div className="grid gap-2">
+                                    <label className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Daily Inventory</label>
+                                    <div className="relative">
+                                        <PackageSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                        <Input name="totalInventory" type="number" defaultValue={editingMeal?.totalInventory} required className="rounded-xl h-12 pl-10" />
+                                    </div>
                                 </div>
                             </div>
                             <div className="grid gap-2">
@@ -140,6 +150,7 @@ function AdminMealsPage() {
                         <TableRow className="hover:bg-transparent border-border/40">
                             <TableHead className="w-[100px] font-bold py-6">Plate</TableHead>
                             <TableHead className="font-bold">Dish Name</TableHead>
+                            <TableHead className="font-bold">Inventory</TableHead>
                             <TableHead className="font-bold">Price</TableHead>
                             <TableHead className="text-right font-bold pr-8">Actions</TableHead>
                         </TableRow>
@@ -176,6 +187,12 @@ function AdminMealsPage() {
                                         <div className="flex flex-col">
                                             <span className="font-bold text-lg">{meal.name}</span>
                                             <span className="text-xs text-muted-foreground line-clamp-1 max-w-[300px]">{meal.description}</span>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell>
+                                        <div className="flex items-center gap-2 font-medium">
+                                            <PackageSearch className="h-4 w-4 text-muted-foreground" />
+                                            {meal.totalInventory} Servings
                                         </div>
                                     </TableCell>
                                     <TableCell>

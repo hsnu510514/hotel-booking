@@ -5,7 +5,7 @@ import { upsertRoom, deleteRoom } from '@/utils/admin'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Plus, Pencil, Trash2, Bed, Users, DollarSign, Image as ImageIcon, Loader2 } from 'lucide-react'
+import { Plus, Pencil, Trash2, Bed, Users, DollarSign, Image as ImageIcon, Loader2, PackageSearch } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { Input } from '@/components/ui/input'
@@ -67,6 +67,7 @@ function AdminRoomsPage() {
       description: formData.get('description') as string,
       pricePerNight: formData.get('pricePerNight') as string,
       capacity: parseInt(formData.get('capacity') as string),
+      totalInventory: parseInt(formData.get('totalInventory') as string),
       imageUrl: formData.get('imageUrl') as string,
     }
     saveMutation.mutate({ data })
@@ -118,6 +119,13 @@ function AdminRoomsPage() {
                     <Input name="capacity" type="number" defaultValue={editingRoom?.capacity} required className="rounded-xl h-12 pl-10" />
                   </div>
                 </div>
+                <div className="grid gap-2">
+                  <label className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Total Units</label>
+                  <div className="relative">
+                    <PackageSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input name="totalInventory" type="number" defaultValue={editingRoom?.totalInventory} required className="rounded-xl h-12 pl-10" />
+                  </div>
+                </div>
               </div>
               <div className="grid gap-2">
                 <label className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Image URL</label>
@@ -151,6 +159,7 @@ function AdminRoomsPage() {
               <TableHead className="w-[100px] font-bold py-6">Image</TableHead>
               <TableHead className="font-bold">Room Name</TableHead>
               <TableHead className="font-bold">Capacity</TableHead>
+              <TableHead className="font-bold">Inventory</TableHead>
               <TableHead className="font-bold">Price</TableHead>
               <TableHead className="text-right font-bold pr-8">Actions</TableHead>
             </TableRow>
@@ -193,6 +202,12 @@ function AdminRoomsPage() {
                     <div className="flex items-center gap-2 font-medium">
                       <Users className="h-4 w-4 text-muted-foreground" />
                       {room.capacity} Guests
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2 font-medium">
+                      <PackageSearch className="h-4 w-4 text-muted-foreground" />
+                      {room.totalInventory} Units
                     </div>
                   </TableCell>
                   <TableCell>
