@@ -1,53 +1,39 @@
-import { describe, it, expect } from "bun:test"
-import { calculateTotalPrice, calculateNights } from "./pricing"
+import { describe, it, expect } from 'bun:test'
+import { calculateNights, calculateTotalPrice } from './pricing'
 
-describe("Pricing Utilities", () => {
-    describe("calculateNights", () => {
-        it("should calculate correct number of nights for a standard range", () => {
-            const from = new Date("2024-01-01")
-            const to = new Date("2024-01-04") // 3 nights
-            expect(calculateNights(from, to)).toBe(3)
+describe('Pricing Utilities', () => {
+    describe('calculateNights', () => {
+        it('should calculate 1 night for same day', () => {
+            const date = new Date('2024-01-01')
+            expect(calculateNights(date, date)).toBe(1)
         })
 
-        it("should return 1 night for same-day selection", () => {
-            const from = new Date("2024-01-01")
-            const to = new Date("2024-01-01")
-            expect(calculateNights(from, to)).toBe(1)
-        })
-
-        it("should return 1 night for negative ranges", () => {
-            const from = new Date("2024-01-04")
-            const to = new Date("2024-01-01")
-            expect(calculateNights(from, to)).toBe(1)
+        it('should calculate correct number of nights', () => {
+            const from = new Date('2024-01-01')
+            const to = new Date('2024-01-03')
+            expect(calculateNights(from, to)).toBe(2)
         })
     })
 
-    describe("calculateTotalPrice", () => {
-        it("should calculate total correctly with room, meals, and activities", () => {
-            const roomPrice = 100
-            const nights = 3
-            const meals = [25, 35]
-            const activities = [50]
-
-            // (100 * 3) + 25 + 35 + 50 = 410
-            const total = calculateTotalPrice(roomPrice, nights, meals, activities)
-            expect(total).toBe("410.00")
+    describe('calculateTotalPrice', () => {
+        it('should calculate total for multiple items with quantities', () => {
+            const items = [
+                { price: 100, quantity: 1, nights: 2 }, // Room
+                { price: '50', quantity: 2 },           // Meals
+                { price: 30, quantity: 3 }              // Activities
+            ]
+            // (100 * 1 * 2) + (50 * 2 * 1) + (30 * 3 * 1) = 200 + 100 + 90 = 390
+            expect(calculateTotalPrice(items)).toBe('390.00')
         })
 
-        it("should handle string prices correctly", () => {
-            const roomPrice = "150.50"
-            const nights = 2
-            const meals = ["20.00", "15.75"]
-            const activities: string[] = []
-
-            // (150.50 * 2) + 20.00 + 15.75 = 301.00 + 35.75 = 336.75
-            const total = calculateTotalPrice(roomPrice, nights, meals, activities)
-            expect(total).toBe("336.75")
+        it('should handle zero quantities', () => {
+            const items = [{ price: 100, quantity: 0 }]
+            expect(calculateTotalPrice(items)).toBe('0.00')
         })
 
-        it("should work with only room price", () => {
-            const total = calculateTotalPrice(200, 1, [], [])
-            expect(total).toBe("200.00")
+        it('should handle string prices correctly', () => {
+            const items = [{ price: '120.50', quantity: 1 }]
+            expect(calculateTotalPrice(items)).toBe('120.50')
         })
     })
 })

@@ -1,11 +1,19 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { getUserBookings, cancelBooking } from '@/utils/booking'
+import { useState } from 'react'
+import { getUserBookings, cancelBooking, getBookingDetails } from '@/utils/booking'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog"
 import { format } from 'date-fns'
-import { Calendar, CreditCard, ChevronRight, AlertCircle, Loader2 } from 'lucide-react'
+import { Calendar, CreditCard, ChevronRight, AlertCircle, Loader2, Utensils, Zap, Hotel } from 'lucide-react'
 import { toast } from 'sonner'
 
 export const Route = createFileRoute('/dashboard')({
@@ -14,6 +22,8 @@ export const Route = createFileRoute('/dashboard')({
 
 function DashboardPage() {
     const queryClient = useQueryClient()
+    const [selectedBookingId, setSelectedBookingId] = useState<string | null>(null)
+
     const { data: bookings, isLoading, error } = useQuery({
         queryKey: ['userBookings'],
         queryFn: () => getUserBookings(),
@@ -77,7 +87,7 @@ function DashboardPage() {
                         </Card>
                     ) : (
                         <div className="grid gap-6">
-                            {bookings.map((booking) => (
+                            {bookings.map((booking: any) => (
                                 <Card key={booking.id} className="overflow-hidden border-border/50 bg-card/50 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
                                     <div className="flex flex-col sm:flex-row">
                                         <div className="flex-1 p-6 space-y-4">
@@ -134,7 +144,12 @@ function DashboardPage() {
                                                         {cancelMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                                                         Cancel Stay
                                                     </Button>
-                                                    <Button size="sm" variant="secondary" className="group">
+                                                    <Button
+                                                        size="sm"
+                                                        variant="secondary"
+                                                        className="group"
+                                                        onClick={() => setSelectedBookingId(booking.id)}
+                                                    >
                                                         Details
                                                         <ChevronRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
                                                     </Button>
@@ -148,6 +163,89 @@ function DashboardPage() {
                     )}
                 </div>
             </div>
+
+            <Dialog open={!!selectedBookingId} onOpenChange={(open) => !open && setSelectedBookingId(null)}>
+                <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+                    <DialogHeader>
+                        <DialogTitle>Booking Details</DialogTitle>
+                        <DialogDescription>
+                            Review all the items included in your luxury stay.
+                        </DialogDescription>
+                    </DialogHeader>
+                    {selectedBookingId && <BookingDetailsContent bookingId={selectedBookingId} />}
+                </DialogContent>
+            </Dialog>
+        </div>
+    )
+}
+
+function BookingDetailsContent({ bookingId }: { bookingId: string }) {
+    const { data: items, isLoading, error } = useQuery({
+        queryKey: ['bookingDetails', bookingId],
+        queryFn: () => getBookingDetails({ data: { bookingId } }),
+    })
+
+    if (isLoading) {
+        return (
+            <div className="flex h-40 items-center justify-center">
+                <Loader2 className="h-6 w-6 animate-spin text-primary" />
+            </div>
+        )
+    }
+
+    if (error || !items) {
+        return (
+            <div className="py-8 text-center text-muted-foreground">
+                <AlertCircle className="mx-auto h-8 w-8 mb-2" />
+                <p>Failed to load details. Please try again.</p>
+            </div>
+        )
+    }
+
+    return (
+        <div className="space-y-6 pt-4">
+            {items.map((item: any) => (
+                <div key={item.id} className="flex gap-4 p-4 rounded-xl bg-muted/50 border border-border/50">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-background border border-border">
+                        {item.type === 'room' && <Hotel className="h-6 w-6 text-primary" />}
+                        {item.type === 'meal' && <Utensils className="h-6 w-6 text-primary" />}
+                        {item.type === 'activity' && <Zap className="h-6 w-6 text-primary" />}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between gap-2">
+                            <div>
+                                <h4 className="font-bold text-lg leading-tight">{item.name}</h4>
+                                <p className="text-sm text-muted-foreground capitalize">{item.type}</p>
+                            </div>
+                            <div className="text-right">
+                                <p className="font-bold text-primary text-lg">${item.price}</p>
+                                <p className="text-xs text-muted-foreground">Qty: {item.quantity}</p>
+                            </div>
+                        </div>
+                        {item.description && (
+                            <p className="mt-2 text-sm text-foreground/80 line-clamp-2">{item.description}</p>
+                        )}
+                        <div className="mt-3 flex items-center gap-4 text-xs text-muted-foreground">
+                            <span className="flex items-center gap-1">
+                                <Calendar className="h-3.5 w-3.5" />
+                                {item.startDate && item.endDate ? (
+                                    `${format(new Date(item.startDate), 'MMM dd')} - ${format(new Date(item.endDate), 'MMM dd')}`
+                                ) : 'N/A'}
+                            </span>
+                            {item.startTime && item.endTime && (
+                                <span className="flex items-center gap-1">
+                                    <Zap className="h-3 w-3" />
+                                    {item.startTime} - {item.endTime}
+                                </span>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            ))}
+
+            {items.length === 0 && (
+                <p className="text-center py-8 text-muted-foreground italic">No items found for this booking.</p>
+            )}
         </div>
     )
 }

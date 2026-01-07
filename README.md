@@ -1,15 +1,26 @@
 # hotel-booking
 
-To install dependencies:
+## 功能
+使用者:
+- 可以選擇時間預定房間、正餐、活動
+- 可以觀看目前所有的預訂紀錄
 
-```bash
-bun install
-```
+管理面板:
+- 可以設定房間、正餐、活動
+- 可以檢視預訂清單，並將結果匯出成 PDF
+- 可以檢視當前項目剩餘數量
 
-To run:
+## 待改進:
+### 功能
+- 取消預訂需要提前時間/可於多久前預訂
+- 預定成功通知(sms、email)
+- 掌握實際人數(房間人數可能不等於實際人數)
 
-```bash
-bun run index.ts
-```
+### UI/UX
+- table 間隔不統一，切換時視覺效果不佳
+- 中文化
+- 字體對比不明顯
 
-This project was created using `bun init` in bun v1.3.5. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
+### 設計限制
+因設計時假定為無須費用，故無實作支付系統，但未來仍須考慮單人超額預定的情況
+- 支付系統/單人預定限制

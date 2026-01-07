@@ -68,3 +68,35 @@
 - [x] T027 Ensure 80%+ test coverage using `bun test` for core booking and calculation logic
 - [x] T028 Final performance audit (interaction latency and bundle size)
 - [x] T029 Accessibility (A11y) review for all UI components
+
+## Phase 8: Enhanced Booking & Inventory
+
+- [x] T030 Update Database Schema for inventory tracking and unit quantities
+- [x] T031 Implement real-time availability calculation logic (remaining count)
+- [x] T032 Redesign `book.tsx` into a multi-step, unified booking flow
+- [x] T033 Update Admin CRUD forms to manage inventory counts
+- [x] T034 Update Booking server functions to handle quantities and specific item dates
+- [x] T035 Integrated validation to prevent overbooking during checkout
+
+---
+
+## Phase 9: Admin Panel Enrichment
+
+- [x] T036 Implement "Tabbed Booking View" in `admin/bookings.tsx` (All / Rooms / Meals / Activities)
+- [x] T037 Build `AdvancedSearchFilter` component (Text, DateRange, Price, Status)
+- [x] T038 Fix booking detail modal not opening on row click
+- [x] T039 Add `getBookingItems` backend function for item-level queries
+- [x] T040 Refactor tabs: "All" shows bookings, resource tabs show booking *items* with Booking ID column
+- [x] T041 Verify all tabs display correct data with proper table columns
+- [x] T042 Refine Admin Dashboard resource tabs by removing "Booking ID" column as per updated requirements
+
+---
+
+## Phase 10: Premium UI Redesign (Post-MVP Polish)
+
+- [x] T043 [P] **Global Theme**: Implement high-contrast "Premium" color palette (Light/Dark) and typography settings in `globals.css`
+- [x] T044 [P] **Navbar**: Redesign for readability, better glassmorphism, and add Mobile "Sheet" Menu
+- [x] T045 [P] **Home Page**: Implement Full-screen Hero, remove scroll indicators, and update buttons for smooth scrolling
+- [x] T046 [P] **Cards**: Redesign Room/Meal/Activity cards (Square aspect, removing "Book" buttons, clickable cards, premium badges)
+- [x] T047 **Assets**: Add logic for image fallbacks (e.g., `spa_activity.png`) and error handling
+

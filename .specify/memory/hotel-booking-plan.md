@@ -78,9 +78,26 @@ Build a comprehensive Hotel Booking System utilizing **TanStack Start** for the 
 - **VerificationTokens**: `identifier`, `token`, `expires`
 - **Rooms**: `id`, `name`, `description`, `price_per_night`, `capacity`
 - **Meals**: `id`, `name`, `description`, `price`
-- **Activities**: `id`, `name`, `description`, `price`, `duration`
+- **Activities**: `id`, `name`, `description`, `price`, `startTime`, `endTime`
 - **Bookings**: `id`, `user_id`, `check_in`, `check_out`, `status`, `total_price`
 - **BookingItems**: `id`, `booking_id`, `type` (room/meal/activity), `item_id`, `price`
+
+## Key Architectural Decisions
+
+### Unified Cart System
+- **Single Source of Truth**: All user selections (Rooms, Meals, Activities) are normalized into a single `CartItem` type.
+- **State Management**:
+    - `cartItems`: Persistent state for confirmed selections in the itinerary.
+    - `pendingSelections`: Temporary state for user input (quantity/date) before adding to cart.
+- **Unified Actions**: `addToCart`, `updateQuantity`, and `updateDate` handles all resource types polymorphically to ensure consistent behavior.
+
+### Inventory Management Strategy
+To prevent overbooking and ensure real-time accuracy:
+1.  **Server-Side Bottleneck Calculation**: `getAvailableResources` (in `availability.ts`) calculates the *minimum* remaining inventory across a requested date range. This identifies the "bottleneck day" that limits the max bookable quantity.
+2.  **Client-Side Real-Time Tracking**:
+    - `itemDayCart` (Memoized Map): Aggregates all items currently in the `cartItems` array by resource ID and specific date.
+    - `getRealRemaining` (Utility): Dynamically calculates `Available = API_Reported_Remaining - Current_Cart_Quantity` for any given date range.
+3.  **UI Feedback**: The interface uses `realRemaining` to disable "Add" buttons and show "X left" badges, ensuring users cannot select more than what is physically available for their specific dates.
 
 ## Phases
 
@@ -102,7 +119,11 @@ Build a comprehensive Hotel Booking System utilizing **TanStack Start** for the 
 - Implement Cancellation logic.
 
 ### Phase 4: Admin Dashboard
-- Build Admin Dashboard interface.
+- **Build Admin Dashboard interface**:
+    - **Sidebar**: Overview, Bookings, Resources (Rooms/Meals/Activities), Settings.
+    - **Bookings View**: Implement **Tabbed Layout** within the main content area (All / Rooms / Meals / Activities).
+    - Create **Advanced Search Filter** component (Name/Email, Dates, Price, Status).
+    - Implement **Booking Detail View** (Side sheet or Modal) showing full itinerary breakdown.
 - Implement CRUD for Rooms, Meals, and Activities.
 - Create Booking Status Panel with summary statistics.
 - Implement Admin booking edit functionality.

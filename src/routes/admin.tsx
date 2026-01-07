@@ -1,7 +1,7 @@
 import { createFileRoute, redirect, Outlet } from '@tanstack/react-router'
 import { getSession } from '@/utils/session'
 import { Button } from '@/components/ui/button'
-import { LayoutDashboard, Bed, Utensils, Sparkles, LogOut, ChevronRight, BookOpen } from 'lucide-react'
+import { LayoutDashboard, Bed, Utensils, Sparkles, LogOut, ChevronRight, BookOpen, ClipboardList } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/admin')({
@@ -33,6 +33,7 @@ function AdminLayout() {
 
         <div className="flex flex-col gap-2 p-4">
           <AdminSidebarLink to="/admin" icon={LayoutDashboard} label="Overview" exact />
+          <AdminSidebarLink to="/admin/inventory" icon={ClipboardList} label="Inventory" />
           <AdminSidebarLink to="/admin/bookings" icon={BookOpen} label="Bookings" />
           <AdminSidebarLink to="/admin/rooms" icon={Bed} label="Rooms" />
           <AdminSidebarLink to="/admin/meals" icon={Utensils} label="Dining" />
